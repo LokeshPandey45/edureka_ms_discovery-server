@@ -10,12 +10,15 @@ spec:
   template:
     metadata:
       labels:
-        app: discovery-service
+        app: discovery-server
     spec:
       containers:
-        - name: discovery-service
+        - name: discovery-server
           image: vishal101090/discovery-service:latest
           imagePullPolicy: IfNotPresent
+          env:
+            - name: SERVER_PORT
+              value: "5001"
           ports:
             - containerPort: 5001
 
@@ -28,7 +31,7 @@ metadata:
 spec:
   selector:
     app: discovery-server
-  type: ClusterIP  # Changed from LoadBalancer to ClusterIP (Ingress handles access now)
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 5001
@@ -36,20 +39,20 @@ spec:
 
 ---
 
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: discovery-ingress
-spec:
-  ingressClassName: nginx   # Requires NGINX Ingress Controller
-  rules:
-    - host: discovery.local   # <--- THIS IS YOUR CUSTOM NAME
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: discovery-service
-                port:
-                  number: 5001
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: discovery-ingress
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: discovery.local
+#      http:
+#        paths:
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: discovery-service
+#                port:
+#                  number: 5001
