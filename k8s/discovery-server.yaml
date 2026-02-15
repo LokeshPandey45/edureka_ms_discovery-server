@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery-server
+  template:
+    metadata:
+      labels:
+        app: discovery-service
+    spec:
+      containers:
+        - name: discovery-service
+          image: vishal101090/discovery-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5001
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-service
+spec:
+  selector:
+    app: discovery-server
+  type: ClusterIP  # Changed from LoadBalancer to ClusterIP (Ingress handles access now)
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: discovery-ingress
+spec:
+  ingressClassName: nginx   # Requires NGINX Ingress Controller
+  rules:
+    - host: discovery.local   # <--- THIS IS YOUR CUSTOM NAME
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: discovery-service
+                port:
+                  number: 5001
