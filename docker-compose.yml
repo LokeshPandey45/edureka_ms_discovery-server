@@ -7,16 +7,16 @@ services:
       dockerfile: Dockerfile
     container_name: edureka-discovery-server
     ports:
-      - "5001:5001"
+      - "6001:6001"
     environment:
       - SPRING_APPLICATION_NAME=discovery-server
-      - SERVER_PORT=5001
+      - SERVER_PORT=6001
       - EUREKA_INSTANCE_HOSTNAME=discovery-server
     networks:
       - microservices-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5001/actuator/health/liveness"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:6001/actuator/health/liveness"]
       interval: 30s
       timeout: 10s
       retries: 3
