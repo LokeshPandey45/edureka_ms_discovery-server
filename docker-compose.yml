@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  discovery-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: edureka-discovery-server
+    ports:
+      - "5001:5001"
+    environment:
+      - SPRING_APPLICATION_NAME=discovery-server
+      - SERVER_PORT=5001
+      - EUREKA_INSTANCE_HOSTNAME=discovery-server
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5001/actuator/health/liveness"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  microservices-network:
+    driver: bridge
+

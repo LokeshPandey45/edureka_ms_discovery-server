@@ -1,7 +1,7 @@
-# Start with a base Java image
-FROM eclipse-temurin:17-jdk
+# Start with a base Java image (using JRE for smaller image size)
+FROM eclipse-temurin:17-jre-alpine
 
-LABEL authors="vishal"
+LABEL authors="Lokesh"
 
 # Set working directory
 WORKDIR /app
@@ -10,12 +10,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Expose the port Eureka runs on
-EXPOSE 5001:5001
-
-#INSTALLING UTILITIES
-RUN apt-get update
-RUN apt-get install -y gcc
-RUN apt-get install -y curl
+EXPOSE 6001
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

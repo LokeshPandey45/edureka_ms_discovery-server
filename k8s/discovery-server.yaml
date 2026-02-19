@@ -14,13 +14,13 @@ spec:
     spec:
       containers:
         - name: discovery-server
-          image: vishal101090/discovery-service:latest
+          image: Lokesh101090/discovery-service:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: SERVER_PORT
-              value: "5001"
+              value: "6001"
           ports:
-            - containerPort: 5001
+            - containerPort: 6001
 
 ---
 
@@ -34,8 +34,8 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 5001
-      targetPort: 5001
+      port: 6001
+      targetPort: 6001
 
 ---
 
